@@ -1,0 +1,234 @@
+---
+title: "assertable Data Assertion Intro"
+author: "Grant Nguyen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{assertable data assertion intro}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+```{r, echo=FALSE, results='asis'}
+library(assertable)
+```
+
+The assertable package contains functions that allow users to easily:
+* Confirm the number of rows and column names of a dataset
+* Check the values of given variables (is not NA/infinite, or is less than, equal to, greater than, or contains a given value or set of values)
+* Check whether the dataset contains all combinations of specified ID variables, and whether it has duplicates within those combinations
+
+This vignette will illustrate how to carry out each of these operations, and to see different ways that assertable can return informative output for informed vetting of tabular data.
+
+## Data
+We will use the CO2 dataset, which has 64 rows and 5 columns of data from an experiment related to the cold tolerances of plants.
+
+```{r, echo=FALSE, results='markup'}
+head(CO2)
+```
+
+## Checking data structures
+### assert_nrows
+assert_nrows makes sure your dataset is a certain number of rows.
+
+```{r, results='asis'}
+assert_nrows(CO2,84)
+```
+
+```{r, results='asis', error=TRUE}
+assert_nrows(CO2,80)
+```
+
+### assert_colnames
+assert_colnames ensures that all column names specified as colnames exist in the dataset, and also that all columns in the dataset exist in the colnames argument.
+
+```{r, results='asis'}
+assert_colnames(CO2,c("Plant","Type","Treatment","conc","uptake"))
+```
+
+```{r, results='asis', error=TRUE}
+assert_colnames(CO2,c("Plant","Type","Treatment","conc","other_uptake"))
+```
+
+If you only want to assert a subset of colnames and allow your dataset to have additional columns besides those specified in colnames, you can use the only_colnames=F option.
+
+```{r,  results='asis'}
+assert_colnames(CO2,c("Plant","Type"), only_colnames=FALSE)
+```
+
+## Checking column values
+Full list of things it can check for:
+* not_na:    All values must not be NA
+* not_inf:   All values must not be infinite
+* lt:        All values must be less than test_valQ
+* lte:       All values must be less than or equal to test_val
+* gt:        All values must be greater than test_val
+* gte:       All values must be greater than or equal to test_val
+* equal:     All values must be equal to test_val
+* not_equal: All values must not equal test_val
+* in:        All values must be one of the values in test_val
+
+  
+### NA, infinite, etc.
+Here, we can check to see whether any columns of a new dataset, CO2_miss, contain na values.
+
+```{r,  results='markup', error=TRUE}
+CO2_miss <- CO2
+CO2_miss[CO2_miss$Plant == "Qn2" & CO2_miss$conc == 175, "uptake"] <- NA
+assert_values(CO2_miss, colnames=c("conc","uptake"), test="not_na")
+```
+
+If we run assert_values on the original data, we can check that the dataset is correct.
+
+```{r, results='markup'}
+assert_values(CO2, colnames=c("conc","uptake"), test="not_na")
+```
+
+Similar functionality exists for checking for infinite values as well, using the not_inf test option.
+
+```{r, results='markup', error=TRUE}
+CO2_inf <- CO2
+CO2_inf[CO2_inf$Plant == "Qn2" & CO2_inf$conc == 175, "uptake"] <- Inf
+assert_values(CO2_inf, colnames=c("conc","uptake"), test="not_inf")
+```
+
+### Greater/less than, contains, equals
+Here, we can see different results for checking values of CO2 against single numeric thresholds.
+
+```{r,   results='markup', error=TRUE}
+assert_values(CO2, colnames="uptake", test="gt", 0) # Are all values greater than 0?
+assert_values(CO2, colnames="conc", test="lte", 1000) # Are all values less than/equal to 1000?
+assert_values(CO2, colnames="uptake", test="lt", 40) # Are all values less than 40?
+```
+
+Using the "in" option for test, we can assert that the values of the given colnames must contain the values in test_val, which can be a vector of any size. 
+
+```{r,   results='markup'}
+assert_values(CO2, colnames="Treatment", test="in", test_val = c("nonchilled","chilled"))
+```
+
+We can also test equivalency, to see whether contents are equal or not equal to a given value. 
+
+```{r,   results='markup'}
+assert_values(CO2, colnames="Type", test="not_equal", "USA")
+assert_values(CO2[CO2$Type == "Quebec",], colnames="Type", test="equal", "Quebec")
+```
+
+### Vector comparisons
+assert_values can also compare your columns against vectors of the same length as the number of rows in your dataset. For example, here we compare the uptake variable against a newly-created new_uptake variable, which is equal to uptake * 2.
+
+```{r,   results='markup'}
+CO2_mult <- CO2
+CO2_mult$new_uptake <- CO2_mult$uptake * 2
+assert_values(CO2, colnames="uptake", test="lt", CO2_mult$new_uptake)
+assert_values(CO2, colnames="uptake", test="equal", CO2_mult$new_uptake/2)
+```
+
+Above, assert_values correctly notes that the uptake = new_uptake / 2. Below, the "gt" assertion fails for a similar reason, while "gte" would have succeeded. Here, we use the display_rows = F option to simply display the row numbers rather than the actual rows that failed this assertion (in this case, it happens to be all the rows).
+
+```{r,   results='markup', error=TRUE}
+CO2_mult <- CO2
+assert_values(CO2, colnames="uptake", test="gt", CO2_mult$new_uptake/2, display_rows=F)
+```
+
+You can combine assert_values calls to test columns against one another based on arbitrary lower/upper bounds; for example, the code below asserts that all values in the uptake column must be less than the value of conc, and that conc must not be more than 50 times the value of uptake.
+
+```{r,   results='markup', error=TRUE}
+CO2_mult <- CO2
+assert_values(CO2, colnames="uptake", test="lt", CO2_mult$conc, display_rows=F)
+assert_values(CO2, colnames="uptake", test="gt", CO2_mult$conc * (1/50))
+```
+
+### na.rm
+The na.rm option in assert_values is useful for numeric comparisons -- if you try to evaluate a number against a NA value, the output will be returned as NA as well and fail your assertion. By specifying na.rm=T, all NA values are not considered as violating the assertion in assert_values.
+
+```{r, results='asis'}
+CO2_miss <- CO2
+CO2_miss[CO2_miss$Plant == "Qn2" & CO2_miss$conc == 175, "uptake"] <- NA
+```
+
+```{r,   results='markup', error=TRUE}
+assert_values(CO2_miss, colnames=c("conc","uptake"), test="lt", 2000)
+```
+
+With na.rm=T, we can evaluate without marking the NA value for Qn2 as a failure.
+
+```{r,   results='markup'}
+assert_values(CO2_miss, colnames=c("conc","uptake"), test="lt", 2000, na.rm=T)
+```
+
+## Checking for ID variables
+assert_ids allows you to check whether your dataset is "square", meaning that it contains all unique combinations of ID variables as sepcified in a named list of vectors (e.g. list(id1=c(1,2), id2=c("A",B))). 
+
+### Asserting unique combinations of ID variables
+The ultimate aim is to make sure that you have one row per unique combination of ID variables, and return violations of this rule for easy vetting. Here, we first try to figure out what combinations of variables uniquely identify the data, whether they are missing any combinations of ID variables, and whether there are any duplicates in the data by ID variables. First, we get the levels of some potential ID variables.
+
+```{r,   results='markup', error=TRUE}
+plants <- as.character(unique(CO2$Plant))
+treatments <- unique(CO2$Treatment)
+concs <- unique(CO2$conc)
+```
+
+Let's see if Plant alone is a unique identifier.
+
+```{r, results='markup', error=TRUE}
+ids <- list(Plant=plants)
+assert_ids(CO2,ids)
+```
+
+There are 7 duplicates for each plant type because each plant has 7 different values of conc. Now, let's try adding conc to the ID list.
+
+```{r, results='markup'}
+ids <- list(Plant=plants,conc=concs)
+assert_ids(CO2, ids)
+```
+
+Our dataset is uniquely identified by Plant and conc! 
+  
+### Finding duplicate observations within combinations of ID variables
+Now, let's see how assert_id returns results when the dataset has duplicate values.
+
+```{r, results='markup', error=TRUE}
+ids <- list(Plant=plants,conc=concs)
+CO2_dups <- rbind(CO2,CO2[CO2$Plant=="Mc2" & CO2$conc < 300,])
+assert_ids(CO2_dups, ids)
+```
+
+Here, we get the unique conbinations of Plant and conc that had duplicate values. If we want a more detailed look at the duplicates, we can specify ids_only = F to return each observation in the original dataset that is a duplicate. This dataset will include the variables n_duplicates (the total number within the combination) and duplicate_id (the observation's unique ID within the combination).
+
+```{r, results='markup', error=TRUE}
+ids <- list(Plant=plants,conc=concs)
+assert_ids(CO2_dups, ids, ids_only=F)
+```
+
+### Additional assert_id options
+This dataset can also be stored into an object by specifying the warn_only = T option, which can then be saved or used for further exploration.
+
+```{r, results='markup', warnings=TRUE}
+ids <- list(Plant=plants,conc=concs)
+dup_rows <- assert_ids(CO2_dups, ids, ids_only=F, warn_only=T)
+dup_rows
+```
+
+One behavior of assert_ids is that it stops at the first violation that it reaches. In the example below, the CO2_dups dataset does not contain a certain set of ID combinations and it also has duplicate rows. Since assert_ids first evaluates whether all ID combinations are present, it errors out on the ID combinations part but does not reach the step where it evaluates duplicates.
+
+```{r, results='markup', error=TRUE}
+## Add a new fake level to plants, use as.character because the "new_plant" level
+## doesn't mix well with the factor level
+new_plants <- c(as.character(plants),"new_plant")
+ids <- list(Plant=new_plants,conc=concs)
+dup_rows <- assert_ids(CO2_dups, ids)
+```
+
+To evaluate both the existing-combinations and no-duplicate conditions using assert_ids, you can call it twice, with warn_only = T and with alternating toggles on the assert_* options. By capturing the output into objects, you can then output those results separately and then stop execution of your script if neither object is NULL.
+
+```{r, results='markup', error=TRUE, warnings=TRUE}
+new_plants <- c(as.character(plants),"new_plant")
+ids <- list(Plant=new_plants,conc=concs)
+combos <- assert_ids(CO2_dups, ids, assert_dups = F, warn_only=T)
+dup_rows <- assert_ids(CO2_dups, ids, assert_combos=F, ids_only=F, warn_only=T)
+
+print(combos)
+print(dup_rows)
+if(!is.null(combos) | !is.null(dup_rows)) stop("assert_ids failed, see above for results")
+```
