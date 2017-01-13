@@ -51,27 +51,27 @@ assert_ids <- function(data, id_vars, assert_combos=TRUE, assert_dups=TRUE, ids_
   
   target_ids <- data.table(expand.grid(id_vars))
   if(assert_combos==TRUE){
-    target_ids[, in_target := 1]
-    data_ids[, in_data := 1]
+    target_ids$in_target <- 1
+    data_ids$in_data <- 1
     
     merged_ids <- merge(data_ids, target_ids, by=id_varnames, all=TRUE)
     
-    if(nrow(merged_ids[in_data==1]) != nrow(merged_ids)) {
+    if(nrow(merged_ids[merged_ids$in_data==1]) != nrow(merged_ids)) {
       if(warn_only == FALSE) {
-        print(merged_ids[is.na(in_data), .SD, .SDcols=id_varnames])
+        print(merged_ids[is.na(merged_ids$in_data), .SD, .SDcols=id_varnames])
         stop("The above combinations of id variables do not exist in your dataset")
       } else {
         warning("The following combinations of id variables do not exist in your dataset")
-        return(merged_ids[is.na(in_data), .SD, .SDcols=id_varnames])
+        return(merged_ids[is.na(merged_ids$in_data), .SD, .SDcols=id_varnames])
       }
     }
-    if(nrow(merged_ids[in_target==1]) != nrow(merged_ids)) {
+    if(nrow(merged_ids[merged_ids$in_target==1]) != nrow(merged_ids)) {
       if(warn_only == FALSE) {
-        print(merged_ids[is.na(in_target), .SD, .SDcols=id_varnames])
+        print(merged_ids[is.na(merged_ids$in_target), .SD, .SDcols=id_varnames])
         stop("The above combinations of id variables exist in your dataset but not in your id_vars list")
       } else {
         warning("The following combinations of id variables exist in your dataset but not in your id_vars list")
-        return(merged_ids[is.na(in_target), .SD, .SDcols=id_varnames])
+        return(merged_ids[is.na(merged_ids$in_target), .SD, .SDcols=id_varnames])
       }
     }
   }
@@ -83,7 +83,8 @@ assert_ids <- function(data, id_vars, assert_combos=TRUE, assert_dups=TRUE, ids_
     ## Get the total number of duplicates in each id combination.
     ## The duplicated function returns all rows after the first unique combination, so add 1 to the length
     ## Then, take unique to get one row per combination of id_varnames
-    duplicate_ids <- unique(duplicates[, n_duplicates := .N + 1, by=id_varnames])
+    ## Use the ("new_var") syntax of data.table to avoid CRAN warnings
+    duplicate_ids <- unique(duplicates[, ("n_duplicates") := .N + 1, by=id_varnames])
     nrow_duplicates <- nrow_duplicates + nrow(duplicate_ids)
 
     if(ids_only == TRUE) {
@@ -94,7 +95,7 @@ assert_ids <- function(data, id_vars, assert_combos=TRUE, assert_dups=TRUE, ids_
       # Get all rows from the original dataset that are duplicates
       duplicate_ids <- merge(data, duplicate_ids, by=id_varnames)
       # Add duplicate_id, which is an incrementing value (e.g. the first observation is 1, the first duplicate is 2, etc.)
-      duplicate_ids[, duplicate_id := 1:.N, by=id_varnames]
+      duplicate_ids[, ("duplicate_id") := 1:.N, by=id_varnames]
       err_message <- paste0("These rows of data are all of the observations with duplicated id_vars, ",
           "and have n_duplicates duplicate observations per combination of id_varnames (",
           nrow_duplicates," total duplicates)")

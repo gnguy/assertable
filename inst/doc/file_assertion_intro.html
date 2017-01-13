@@ -12,7 +12,7 @@
 
 <meta name="author" content="Grant Nguyen" />
 
-<meta name="date" content="2017-01-12" />
+<meta name="date" content="2017-01-13" />
 
 <title>assertable File Assertion Intro</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">assertable File Assertion Intro</h1>
 <h4 class="author"><em>Grant Nguyen</em></h4>
-<h4 class="date"><em>2017-01-12</em></h4>
+<h4 class="date"><em>2017-01-13</em></h4>
 
 
 
@@ -86,41 +86,36 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="checking-file-existence" class="section level2">
 <h2>Checking file existence</h2>
-<p>check_files checks to see how many of your files currently exist, and stop script execution if not all files exist.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;../data/file_&quot;</span>,<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">3</span>),<span class="st">&quot;.csv&quot;</span>)
+<p>check_files checks to see how many of your files currently exist, and stop script execution if not all files exist. We can use the system.file command to locate them within the assertable namespace.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">files &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;file_&quot;</span>,<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">3</span>),<span class="st">&quot;.csv&quot;</span>)
+filenames &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, files, <span class="dt">package =</span> <span class="st">&quot;assertable&quot;</span>)
 filenames</code></pre></div>
-<pre><code>## [1] &quot;../data/file_1.csv&quot; &quot;../data/file_2.csv&quot; &quot;../data/file_3.csv&quot;</code></pre>
+<pre><code>## [1] &quot;/private/var/folders/kq/hq1ncdjd2rgf3ffksmbpkg0h0024j3/T/RtmpuSstbR/Rinst255c44550485/assertable/extdata/file_1.csv&quot;
+## [2] &quot;/private/var/folders/kq/hq1ncdjd2rgf3ffksmbpkg0h0024j3/T/RtmpuSstbR/Rinst255c44550485/assertable/extdata/file_2.csv&quot;
+## [3] &quot;/private/var/folders/kq/hq1ncdjd2rgf3ffksmbpkg0h0024j3/T/RtmpuSstbR/Rinst255c44550485/assertable/extdata/file_3.csv&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">check_files</span>(filenames)</code></pre></div>
 <pre><code>## [1] &quot;All results are present&quot;</code></pre>
 <p>Here, let’s add another file to filenames.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;../data/file_&quot;</span>,<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">4</span>),<span class="st">&quot;.csv&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">c</span>(filenames,<span class="st">&quot;new_file.csv&quot;</span>)
 <span class="kw">check_files</span>(filenames)</code></pre></div>
-<pre><code>## [1] &quot;Have 3 files: expecting 4 at 2017-01-12 17:47:14&quot;
-## [1] &quot;Still Missing:  ../data/file_4.csv&quot;</code></pre>
+<pre><code>## [1] &quot;Have 3 files: expecting 4 at 2017-01-13 11:46:04&quot;
+## [1] &quot;Still Missing:  new_file.csv&quot;</code></pre>
 <pre><code>## Error in check_files(filenames): Files not complete; stopping execution -- set continual=T for continual file checks</code></pre>
 <p>By setting continual = T, you can keep checking for the files every few seconds (specified by sleep_time) for a designated number of minutes (specified by sleep_end). This is particularly useful when monitoring the progress of distributed compute jobs, or pausing execution of a step until all previous steps have successfully produced otuput files.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;../data/file_&quot;</span>,<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">4</span>),<span class="st">&quot;.csv&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">c</span>(filenames,<span class="st">&quot;new_file.csv&quot;</span>)
 <span class="kw">check_files</span>(filenames, <span class="dt">continual=</span>T, <span class="dt">sleep_time =</span> <span class="dv">1</span>, <span class="dt">sleep_end =</span> .<span class="dv">10</span>)</code></pre></div>
-<pre><code>## [1] &quot;Have 3 files: expecting 4 at 2017-01-12 17:47:14&quot;
-## [1] &quot;Still Missing:  ../data/file_4.csv&quot;
-## [1] &quot;Have 3 files: expecting 4 at 2017-01-12 17:47:15&quot;
-## [1] &quot;Still Missing:  ../data/file_4.csv&quot;
-## [1] &quot;Have 3 files: expecting 4 at 2017-01-12 17:47:16&quot;
-## [1] &quot;Still Missing:  ../data/file_4.csv&quot;
-## [1] &quot;Have 3 files: expecting 4 at 2017-01-12 17:47:17&quot;
-## [1] &quot;Still Missing:  ../data/file_4.csv&quot;
-## [1] &quot;Have 3 files: expecting 4 at 2017-01-12 17:47:18&quot;
-## [1] &quot;Still Missing:  ../data/file_4.csv&quot;
-## [1] &quot;Have 3 files: expecting 4 at 2017-01-12 17:47:19&quot;
-## [1] &quot;Still Missing:  ../data/file_4.csv&quot;
-## [1] &quot;Have 3 files: expecting 4 at 2017-01-12 17:47:20&quot;
-## [1] &quot;Still Missing:  ../data/file_4.csv&quot;</code></pre>
+<pre><code>## [1] &quot;Have 3 files: expecting 5 at 2017-01-13 11:46:04&quot;
+## [1] &quot;Have 3 files: expecting 5 at 2017-01-13 11:46:05&quot;
+## [1] &quot;Have 3 files: expecting 5 at 2017-01-13 11:46:06&quot;
+## [1] &quot;Have 3 files: expecting 5 at 2017-01-13 11:46:07&quot;
+## [1] &quot;Have 3 files: expecting 5 at 2017-01-13 11:46:08&quot;
+## [1] &quot;Have 3 files: expecting 5 at 2017-01-13 11:46:09&quot;
+## [1] &quot;Have 3 files: expecting 5 at 2017-01-13 11:46:10&quot;</code></pre>
 <pre><code>## Error in check_files(filenames, continual = T, sleep_time = 1, sleep_end = 0.1): Files not complete; stopping execution after 0.1 minutes</code></pre>
 <p>check_files only prints out missing files if 75% of the requested files exist. You can change this using the display_pct argument. This is useful to see what specific files/processes may have errored out, but without filling up your logs while they are computing.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;../data/file_&quot;</span>,<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">5</span>),<span class="st">&quot;.csv&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">c</span>(filenames,<span class="st">&quot;new_file_1.csv&quot;</span>,<span class="st">&quot;new_file_2.csv&quot;</span>)
 <span class="kw">check_files</span>(filenames, <span class="dt">display_pct=</span><span class="dv">50</span>)</code></pre></div>
-<pre><code>## [1] &quot;Have 3 files: expecting 5 at 2017-01-12 17:47:21&quot;
-## [1] &quot;Still Missing:  ../data/file_4.csv ../data/file_5.csv&quot;</code></pre>
+<pre><code>## [1] &quot;Have 3 files: expecting 7 at 2017-01-13 11:46:11&quot;</code></pre>
 <pre><code>## Error in check_files(filenames, display_pct = 50): Files not complete; stopping execution -- set continual=T for continual file checks</code></pre>
 </div>
 <div id="importing-files" class="section level2">
@@ -128,7 +123,8 @@ filenames</code></pre></div>
 <p>All files are imported using a wrapper of rbindlist and lapply – so this assumes that your data is similarly-formulated, tabular in nature, and able to be appended together using rbindlist. It accepts a function FUN, which will be used to import your data – you must set the library for this function before using it.</p>
 <p>You can specify use.names and fill arguments to pass onto rbindlist. In addition, if multicore=T, import_files will use mclapply instead of lapply – you can specify mc.preschedule and mc.cores as options to mclapply. Finally, you can pass on FUN-specific arguments via named arguments to import_files</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(data.table)
-filenames &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;../data/file_&quot;</span>,<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">3</span>),<span class="st">&quot;.csv&quot;</span>)
+files &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;file_&quot;</span>,<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">3</span>),<span class="st">&quot;.csv&quot;</span>)
+filenames &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, files, <span class="dt">package =</span> <span class="st">&quot;assertable&quot;</span>)
 data &lt;-<span class="st"> </span><span class="kw">import_files</span>(filenames, <span class="dt">FUN=</span>fread)
 data</code></pre></div>
 <pre><code>##      Plant        Type  Treatment conc uptake id_var
@@ -159,9 +155,9 @@ data</code></pre></div>
 ## 251:   Mc3 Mississippi    chilled  675   18.9      3
 ## 252:   Mc3 Mississippi    chilled 1000   19.9      3</code></pre>
 <p>import_files first scans to make sure that all requested files exist prior to bringing them in. This can save a lot of time if you have numerous large files and currently only stop execution if your read.csv or other data import function breaks (potentially after importing many other files beforehand).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;../data/file_&quot;</span>,<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">20</span>),<span class="st">&quot;.csv&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">c</span>(filenames,<span class="kw">paste0</span>(<span class="st">&quot;new_file_&quot;</span>,<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">10</span>),<span class="st">&quot;.csv&quot;</span>))
 <span class="kw">import_files</span>(filenames)</code></pre></div>
-<pre><code>## Error in import_files(filenames): The following files do not exist: ../data/file_4.csv ../data/file_5.csv ../data/file_6.csv ../data/file_7.csv ../data/file_8.csv ../data/file_9.csv ../data/file_10.csv ../data/file_11.csv ../data/file_12.csv ../data/file_13.csv ../data/file_14.csv ../data/file_15.csv ../data/file_16.csv ../data/file_17.csv ../data/file_18.csv ../data/file_19.csv ../data/file_20.csv</code></pre>
+<pre><code>## Error in import_files(filenames): The following files do not exist: new_file_1.csv new_file_2.csv new_file_3.csv new_file_4.csv new_file_5.csv new_file_6.csv new_file_7.csv new_file_8.csv new_file_9.csv new_file_10.csv</code></pre>
 </div>
 
 

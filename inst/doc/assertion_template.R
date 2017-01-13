@@ -9,7 +9,9 @@ library(assertable); library(data.table)
 #  }
 
 ## ---- results='markup'---------------------------------------------------
-filenames <- paste0("../data/file_",c(1:3),".csv")
+filenames <- paste0("file_",c(1:3),".csv")
+filenames <- system.file("extdata", filenames, package = "assertable")
+
 filenames
 
 ## ---- results='markup'---------------------------------------------------

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Grant Nguyen" />
 
-<meta name="date" content="2017-01-12" />
+<meta name="date" content="2017-01-13" />
 
 <title>assertable File Assertion Intro</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">assertable File Assertion Intro</h1>
 <h4 class="author"><em>Grant Nguyen</em></h4>
-<h4 class="date"><em>2017-01-12</em></h4>
+<h4 class="date"><em>2017-01-13</em></h4>
 
 
 
@@ -85,10 +85,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="file-check-and-import" class="section level2">
 <h2>File Check and Import</h2>
-<p>First, use check_files to make sure the files exist. Then, run import_files to bring them in. We’ll call the combined data object master_data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;../data/file_&quot;</span>,<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">3</span>),<span class="st">&quot;.csv&quot;</span>)
+<p>First, use check_files to make sure the files exist. We can use the system.file command to locate them within the assertable package. Then, run import_files to bring them in. We’ll call the combined data object master_data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;file_&quot;</span>,<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">3</span>),<span class="st">&quot;.csv&quot;</span>)
+filenames &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, filenames, <span class="dt">package =</span> <span class="st">&quot;assertable&quot;</span>)
+
 filenames</code></pre></div>
-<pre><code>## [1] &quot;../data/file_1.csv&quot; &quot;../data/file_2.csv&quot; &quot;../data/file_3.csv&quot;</code></pre>
+<pre><code>## [1] &quot;/private/var/folders/kq/hq1ncdjd2rgf3ffksmbpkg0h0024j3/T/RtmpuSstbR/Rinst255c44550485/assertable/extdata/file_1.csv&quot;
+## [2] &quot;/private/var/folders/kq/hq1ncdjd2rgf3ffksmbpkg0h0024j3/T/RtmpuSstbR/Rinst255c44550485/assertable/extdata/file_2.csv&quot;
+## [3] &quot;/private/var/folders/kq/hq1ncdjd2rgf3ffksmbpkg0h0024j3/T/RtmpuSstbR/Rinst255c44550485/assertable/extdata/file_3.csv&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">check_files</span>(filenames)</code></pre></div>
 <pre><code>## [1] &quot;All results are present&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">master_data &lt;-<span class="st"> </span><span class="kw">import_files</span>(filenames,<span class="dt">FUN=</span>fread)

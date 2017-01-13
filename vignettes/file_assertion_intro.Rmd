@@ -27,10 +27,11 @@ for(i in 1:3) {
 ```
 
 ## Checking file existence
-check_files checks to see how many of your files currently exist, and stop script execution if not all files exist. 
+check_files checks to see how many of your files currently exist, and stop script execution if not all files exist. We can use the system.file command to locate them within the assertable namespace.
 
 ```{r, results='markup'}
-filenames <- paste0("../data/file_",c(1:3),".csv")
+files <- paste0("file_",c(1:3),".csv")
+filenames <- system.file("extdata", files, package = "assertable")
 filenames
 ```
 
@@ -41,21 +42,21 @@ check_files(filenames)
 Here, let's add another file to filenames.
 
 ```{r, results='markup', error=TRUE}
-filenames <- paste0("../data/file_",c(1:4),".csv")
+filenames <- c(filenames,"new_file.csv")
 check_files(filenames)
 ```
 
 By setting continual = T, you can keep checking for the files every few seconds (specified by sleep_time) for a designated number of minutes (specified by sleep_end). This is particularly useful when monitoring the progress of distributed compute jobs, or pausing execution of a step until all previous steps have successfully produced otuput files.
 
 ```{r, results='markup', error=TRUE}
-filenames <- paste0("../data/file_",c(1:4),".csv")
+filenames <- c(filenames,"new_file.csv")
 check_files(filenames, continual=T, sleep_time = 1, sleep_end = .10)
 ```
 
 check_files only prints out missing files if 75% of the requested files exist. You can change this using the display_pct argument. This is useful to see what specific files/processes may have errored out, but without filling up your logs while they are computing.
 
 ```{r, results='markup', error=TRUE}
-filenames <- paste0("../data/file_",c(1:5),".csv")
+filenames <- c(filenames,"new_file_1.csv","new_file_2.csv")
 check_files(filenames, display_pct=50)
 ```
 
@@ -66,7 +67,8 @@ You can specify use.names and fill arguments to pass onto rbindlist. In addition
 
 ```{r, results='markup'}
 library(data.table)
-filenames <- paste0("../data/file_",c(1:3),".csv")
+files <- paste0("file_",c(1:3),".csv")
+filenames <- system.file("extdata", files, package = "assertable")
 data <- import_files(filenames, FUN=fread)
 data
 ```
@@ -81,7 +83,7 @@ data
 import_files first scans to make sure that all requested files exist prior to bringing them in. This can save a lot of time if you have numerous large files and currently only stop execution if your read.csv or other data import function breaks (potentially after importing many other files beforehand).
 
 ```{r, results='markup', error=TRUE}
-filenames <- paste0("../data/file_",c(1:20),".csv")
+filenames <- c(filenames,paste0("new_file_",c(1:10),".csv"))
 import_files(filenames)
 ```
 
