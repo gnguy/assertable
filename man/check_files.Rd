@@ -4,11 +4,15 @@
 \alias{check_files}
 \title{Check for the existence of a vector of files, optionally repeated for a set amount of time.}
 \usage{
-check_files(filenames, continual = FALSE, sleep_time = 30, sleep_end = (60
-  * 3), display_pct = 75)
+check_files(filenames, folder = "", warn_only = FALSE, continual = FALSE,
+  sleep_time = 30, sleep_end = (60 * 3), display_pct = 75)
 }
 \arguments{
 \item{filenames}{A character vector of filenames (specify full paths if you are checking files that are not in present working directory)}
+
+\item{folder}{An optional character containing the folder name that contains the files you want to check (if used, do not include folderpath in the filenames characters). If not specified, will search in present working directory.}
+
+\item{warn_only}{Boolean (T/F), whether to end with a warning message as opposed to an error message if files are still missing at the end of the checks.}
 
 \item{continual}{Boolean (T/F), whether to only run once or to continually keep checking for files for \emph{sleep_end} minutes. Default = F.}
 
@@ -19,7 +23,7 @@ check_files(filenames, continual = FALSE, sleep_time = 30, sleep_end = (60
 \item{display_pct}{numeric (0-100); at what percentage of files found do you want to print the full list of still-missing files? Default = 75 percent of files.}
 }
 \value{
-Prints the number of files that match
+Prints the number of files that match. If \emph{warn_only} = T, returns a character vector of missing files
 }
 \description{
 Given a character vector of filenames, check how many of them currently exist. 

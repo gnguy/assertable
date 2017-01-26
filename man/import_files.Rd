@@ -4,14 +4,18 @@
 \alias{import_files}
 \title{Given a vector of filenames, append all files and return as one data.table using a user-defined function}
 \usage{
-import_files(filenames, FUN = fread, multicore = FALSE, use.names = TRUE,
-  fill = TRUE, mc.preschedule = FALSE, mc.cores = getOption("mc.cores",
-  2L), ...)
+import_files(filenames, folder = "", FUN = fread, warn_only = FALSE,
+  multicore = FALSE, use.names = TRUE, fill = TRUE,
+  mc.preschedule = FALSE, mc.cores = getOption("mc.cores", 2L), ...)
 }
 \arguments{
 \item{filenames}{A character vector of filenames (specify full paths if you are checking files that are not in present working directory)}
 
+\item{folder}{An optional character containing the folder name that contains the files you want to check (if used, do not include folderpath in the filenames characters). If not specified, will look in present working directory.}
+
 \item{FUN}{function: The function that you want to use to import your data, e.g. read.csv, fread, read_dta, etc.}
+
+\item{warn_only}{Boolean (T/F), whether to send a warning message as opposed to an error message if files are missing prior to import. Will only import the files that do exist.}
 
 \item{multicore}{boolean, use lapply or mclapply (multicore = T) to loop over files in \emph{filenames} for import. Default=F.}
 

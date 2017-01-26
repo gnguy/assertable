@@ -10,7 +10,7 @@ assert_ids(data, id_vars, assert_combos = TRUE, assert_dups = TRUE,
 \arguments{
 \item{data}{A data.frame or data.table}
 
-\item{id_vars}{A named list of character vectors, where the name of each character vector must correspond to a column in \emph{data}}
+\item{id_vars}{A named list of vectors, where the name of each vector must correspond to a column in \emph{data}}
 
 \item{assert_combos}{Assert that the data object must contain all combinations of \emph{id_vars}. Default = T.}
 
@@ -19,7 +19,7 @@ assert_ids(data, id_vars, assert_combos = TRUE, assert_dups = TRUE,
 \item{ids_only}{By default, with assert_dups = T, the function returns the unique combinations of id_vars that have duplicate observations. 
 If ids_only = F, will return every observation in the original dataset that are duplicates.}
 
-\item{warn_only}{Do you want to warn, rather than error? Will return all offending rows from the first violation of the assertion Default=F}
+\item{warn_only}{Do you want to warn, rather than error? Will return all offending rows from the first violation of the assertion. Default=F}
 }
 \value{
 Throws error if test is violated. Will print the offending rows. If warn_only=T, will return all offending rows and only warn.
@@ -36,7 +36,7 @@ and \emph{duplicate_id}: a unique ID for each duplicate value within each combin
 Note: if assert_combos = T and is violated, then assert_ids will stop execution and return results for assert_combos
        before evaluating the assert_dups segment of the code. 
        If you want to make sure both options are evaluated even in case of a violation in assert_combos,
-       call assert_ids twice (once with assert_dups = F, then assert_combos = F) with warn_only = F, 
+       call assert_ids twice (once with assert_dups = F, then assert_combos = F) with warn_only = T, 
        and then conditionally stop your code if either call returns results.
 }
 \examples{
