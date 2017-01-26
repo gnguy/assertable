@@ -39,6 +39,23 @@ assert_ids <- function(data, id_vars, assert_combos=TRUE, assert_dups=TRUE, ids_
     if(!varname %in% colnames(data)) stop(paste("The following id_var must exist as a column name in your dataset:",varname))
     ## Coerce factors to characters to avoid any merge or display issues
     if(is.factor(id_vars[[varname]])) id_vars[[varname]] <- as.character(id_vars[[varname]])
+    
+    ## Stop if trying to use assert_ids on a factor that contains underlying numeric values
+    ## Too difficult to match them (data.table matches numerics to the underlying numeric value, not the label)
+    ## And don't want to coerce the character types back-and-forth
+    if(is.data.table(data)){
+      if(is.factor(data[, get(varname)])) {
+        if(typeof(id_vars[[varname]]) != "character")
+          stop(paste0("Cannot evaluate ", varname, ": the variable in the data is factor while the values for the variable in the id_vars list are not character values or factors. ",
+                      "Either convert variable from factor to character/numeric or express id_vars as character values of the levels or as a factor itself"))
+      }
+    } else {
+      if(is.factor(data[, varname])){
+        if(typeof(id_vars[[varname]]) != "character")
+          stop(paste0("Cannot evaluate ", varname, ": the variable in the data is factor while the values for the variable in the id_vars list are not character values or factors. ",
+                      "Either convert variable from factor to character/numeric or express id_vars as character values of the levels or as a factor itself"))
+      }
+    }
   }
 
   ## Extract the id variables from the dataset
@@ -51,7 +68,7 @@ assert_ids <- function(data, id_vars, assert_combos=TRUE, assert_dups=TRUE, ids_
     }
   }  
   
-  target_ids <- data.table(expand.grid(id_vars))
+  target_ids <- data.table(expand.grid(id_vars,stringsAsFactors=FALSE))
   if(assert_combos==TRUE){
     target_ids$in_target <- 1
     data_ids$in_data <- 1
