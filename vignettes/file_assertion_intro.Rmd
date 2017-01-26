@@ -4,7 +4,7 @@ author: "Grant Nguyen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{assertable data assertion intro}
+  %\VignetteIndexEntry{assertable file assertion intro}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -12,4 +12,5 @@
 
 assert_nrows <- function(data,target_nrows) {
   if(nrow(data) != target_nrows) stop(paste0("Have ", nrow(data), " rows, expecting ",target_nrows))
+  print("All rows present")
 }
