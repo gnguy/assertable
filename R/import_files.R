@@ -5,7 +5,9 @@
 #' 
 
 #' @param filenames A character vector of filenames (specify full paths if you are checking files that are not in present working directory)
+#' @param folder An optional character containing the folder name that contains the files you want to check (if used, do not include folderpath in the filenames characters). If not specified, will look in present working directory. 
 #' @param FUN function: The function that you want to use to import your data, e.g. read.csv, fread, read_dta, etc.
+#' @param warn_only Boolean (T/F), whether to send a warning message as opposed to an error message if files are missing prior to import. Will only import the files that do exist.
 #' @param multicore boolean, use lapply or mclapply (multicore = T) to loop over files in \emph{filenames} for import. Default=F.
 #' @param use.names boolean, pass to the use.names option for \emph{rbindlist}
 #' @param fill boolean, pass to the fill option for \emph{rbindlist}
@@ -32,17 +34,39 @@
 
 #' @import data.table
 
-import_files <- function(filenames, FUN=fread, multicore=FALSE, use.names=TRUE, fill=TRUE, 
+import_files <- function(filenames, folder="", FUN=fread, warn_only=FALSE, multicore=FALSE, use.names=TRUE, fill=TRUE, 
                         mc.preschedule=FALSE, mc.cores = getOption("mc.cores", 2L), ...) {
   
+  if(folder != "") {
+    pwd <- getwd()
+    setwd(folder)
+  }
+
   file_list <- sapply(filenames,file.exists)
   file_list <- names(file_list)[file_list==FALSE]
-  if(length(file_list) > 0) stop("The following files do not exist: ",paste(file_list, collapse=" "))
+  if(length(file_list) > 0) {
+    message <- paste0("These files do not exist: ",paste(file_list, collapse=" "))
+
+    if(warn_only == FALSE) {
+      if(folder != "") setwd(pwd)
+      stop(message)
+    } else {
+      warning(paste0("Some files don't exist, importing those that do exist. ",message))
+      filenames <- filenames[!filenames %in% file_list]
+      if(length(filenames)==0) {
+        if(folder != "") setwd(pwd)
+        stop("No files exist to import")
+      }
+    }
+  }
+
   if(multicore == FALSE) {
     results <- rbindlist(lapply(filenames, FUN,...), use.names=use.names, fill=fill)
   } else {
     results <- rbindlist(parallel::mclapply(filenames, FUN,..., mc.preschedule=mc.preschedule, mc.cores=mc.cores), 
                         use.names=use.names, fill=fill)
   }
+
+  if(folder != "") setwd(pwd)
   return(results)
 }
