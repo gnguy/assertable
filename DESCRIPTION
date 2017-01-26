@@ -15,4 +15,4 @@ RoxygenNote: 5.0.1
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr, data.table
 NeedsCompilation: no
-Packaged: 2017-01-13 19:46:11 UTC; gngu
+Packaged: 2017-01-26 22:59:49 UTC; gngu

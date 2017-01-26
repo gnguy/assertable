@@ -1,10 +1,10 @@
 ---
-title: "assertable File Assertion Intro"
+title: "assertable Template"
 author: "Grant Nguyen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{assertable data assertion intro}
+  %\VignetteIndexEntry{assertable template}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

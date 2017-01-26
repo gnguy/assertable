@@ -12,7 +12,7 @@
 
 <meta name="author" content="Grant Nguyen" />
 
-<meta name="date" content="2017-01-13" />
+<meta name="date" content="2017-01-26" />
 
 <title>assertable Data Assertion Intro</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">assertable Data Assertion Intro</h1>
 <h4 class="author"><em>Grant Nguyen</em></h4>
-<h4 class="date"><em>2017-01-13</em></h4>
+<h4 class="date"><em>2017-01-26</em></h4>
 
 
 
@@ -93,6 +93,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3>assert_nrows</h3>
 <p>assert_nrows makes sure your dataset is a certain number of rows.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">assert_nrows</span>(CO2,<span class="dv">84</span>)</code></pre></div>
+<p>[1] “All rows present”</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">assert_nrows</span>(CO2,<span class="dv">80</span>)</code></pre></div>
 <pre><code>## Error in assert_nrows(CO2, 80): Have 84 rows, expecting 80</code></pre>
 </div>
@@ -100,10 +101,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3>assert_colnames</h3>
 <p>assert_colnames ensures that all column names specified as colnames exist in the dataset, and also that all columns in the dataset exist in the colnames argument.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">assert_colnames</span>(CO2,<span class="kw">c</span>(<span class="st">&quot;Plant&quot;</span>,<span class="st">&quot;Type&quot;</span>,<span class="st">&quot;Treatment&quot;</span>,<span class="st">&quot;conc&quot;</span>,<span class="st">&quot;uptake&quot;</span>))</code></pre></div>
+<p>[1] “All column names present”</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">assert_colnames</span>(CO2,<span class="kw">c</span>(<span class="st">&quot;Plant&quot;</span>,<span class="st">&quot;Type&quot;</span>,<span class="st">&quot;Treatment&quot;</span>,<span class="st">&quot;conc&quot;</span>,<span class="st">&quot;other_uptake&quot;</span>))</code></pre></div>
 <pre><code>## Error in assert_colnames(CO2, c(&quot;Plant&quot;, &quot;Type&quot;, &quot;Treatment&quot;, &quot;conc&quot;, : These columns exist in colnames but not in your dataframe: other_uptake and these exist in your dataframe but not in colnames: uptake</code></pre>
 <p>If you only want to assert a subset of colnames and allow your dataset to have additional columns besides those specified in colnames, you can use the only_colnames=F option.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">assert_colnames</span>(CO2,<span class="kw">c</span>(<span class="st">&quot;Plant&quot;</span>,<span class="st">&quot;Type&quot;</span>), <span class="dt">only_colnames=</span><span class="ot">FALSE</span>)</code></pre></div>
+<p>[1] “All column names present”</p>
 </div>
 </div>
 <div id="checking-column-values" class="section level2">
@@ -230,6 +233,7 @@ concs &lt;-<span class="st"> </span><span class="kw">unique</span>(CO2$conc)</co
 <p>There are 7 duplicates for each plant type because each plant has 7 different values of conc. Now, let’s try adding conc to the ID list.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ids &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">Plant=</span>plants,<span class="dt">conc=</span>concs)
 <span class="kw">assert_ids</span>(CO2, ids)</code></pre></div>
+<pre><code>## [1] &quot;Data is identified by id_vars: Plant conc&quot;</code></pre>
 <p>Our dataset is uniquely identified by Plant and conc!</p>
 </div>
 <div id="finding-duplicate-observations-within-combinations-of-id-variables" class="section level3">

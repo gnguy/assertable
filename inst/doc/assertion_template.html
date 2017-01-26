@@ -12,9 +12,9 @@
 
 <meta name="author" content="Grant Nguyen" />
 
-<meta name="date" content="2017-01-13" />
+<meta name="date" content="2017-01-26" />
 
-<title>assertable File Assertion Intro</title>
+<title>assertable Template</title>
 
 
 
@@ -68,9 +68,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">assertable File Assertion Intro</h1>
+<h1 class="title toc-ignore">assertable Template</h1>
 <h4 class="author"><em>Grant Nguyen</em></h4>
-<h4 class="date"><em>2017-01-13</em></h4>
+<h4 class="date"><em>2017-01-26</em></h4>
 
 
 
@@ -90,9 +90,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 filenames &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, filenames, <span class="dt">package =</span> <span class="st">&quot;assertable&quot;</span>)
 
 filenames</code></pre></div>
-<pre><code>## [1] &quot;/private/var/folders/kq/hq1ncdjd2rgf3ffksmbpkg0h0024j3/T/RtmpuSstbR/Rinst255c44550485/assertable/extdata/file_1.csv&quot;
-## [2] &quot;/private/var/folders/kq/hq1ncdjd2rgf3ffksmbpkg0h0024j3/T/RtmpuSstbR/Rinst255c44550485/assertable/extdata/file_2.csv&quot;
-## [3] &quot;/private/var/folders/kq/hq1ncdjd2rgf3ffksmbpkg0h0024j3/T/RtmpuSstbR/Rinst255c44550485/assertable/extdata/file_3.csv&quot;</code></pre>
+<pre><code>## [1] &quot;/private/var/folders/kq/hq1ncdjd2rgf3ffksmbpkg0h0024j3/T/RtmpVShPZo/Rinst36cea39953e/assertable/extdata/file_1.csv&quot;
+## [2] &quot;/private/var/folders/kq/hq1ncdjd2rgf3ffksmbpkg0h0024j3/T/RtmpVShPZo/Rinst36cea39953e/assertable/extdata/file_2.csv&quot;
+## [3] &quot;/private/var/folders/kq/hq1ncdjd2rgf3ffksmbpkg0h0024j3/T/RtmpVShPZo/Rinst36cea39953e/assertable/extdata/file_3.csv&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">check_files</span>(filenames)</code></pre></div>
 <pre><code>## [1] &quot;All results are present&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">master_data &lt;-<span class="st"> </span><span class="kw">import_files</span>(filenames,<span class="dt">FUN=</span>fread)
@@ -108,12 +108,15 @@ filenames</code></pre></div>
 <div id="checking-dimensions" class="section level2">
 <h2>Checking Dimensions</h2>
 <p>This dataset should have 84 * 3 rows, and six columns: Plant, Type, Treatment, conc, uptake, and id_var.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">assert_nrows</span>(master_data,(<span class="dv">84</span>*<span class="dv">3</span>))
-<span class="kw">assert_colnames</span>(master_data,<span class="kw">c</span>(<span class="st">&quot;plant&quot;</span>,<span class="st">&quot;type&quot;</span>,<span class="st">&quot;treatment&quot;</span>,<span class="st">&quot;conc&quot;</span>,<span class="st">&quot;uptake&quot;</span>,<span class="st">&quot;id_var&quot;</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">assert_nrows</span>(master_data,(<span class="dv">84</span>*<span class="dv">3</span>))</code></pre></div>
+<pre><code>## [1] &quot;All rows present&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">assert_colnames</span>(master_data,<span class="kw">c</span>(<span class="st">&quot;plant&quot;</span>,<span class="st">&quot;type&quot;</span>,<span class="st">&quot;treatment&quot;</span>,<span class="st">&quot;conc&quot;</span>,<span class="st">&quot;uptake&quot;</span>,<span class="st">&quot;id_var&quot;</span>))</code></pre></div>
 <pre><code>## Error in assert_colnames(master_data, c(&quot;plant&quot;, &quot;type&quot;, &quot;treatment&quot;, : These columns exist in colnames but not in your dataframe: plant type treatment and these exist in your dataframe but not in colnames: Plant Type Treatment</code></pre>
 <p>Oops, forgot to capitalize the column names. Trying again.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">assert_nrows</span>(master_data,(<span class="dv">84</span>*<span class="dv">3</span>))
-<span class="kw">assert_colnames</span>(master_data,<span class="kw">c</span>(<span class="st">&quot;Plant&quot;</span>,<span class="st">&quot;Type&quot;</span>,<span class="st">&quot;Treatment&quot;</span>,<span class="st">&quot;conc&quot;</span>,<span class="st">&quot;uptake&quot;</span>,<span class="st">&quot;id_var&quot;</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">assert_nrows</span>(master_data,(<span class="dv">84</span>*<span class="dv">3</span>))</code></pre></div>
+<pre><code>## [1] &quot;All rows present&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">assert_colnames</span>(master_data,<span class="kw">c</span>(<span class="st">&quot;Plant&quot;</span>,<span class="st">&quot;Type&quot;</span>,<span class="st">&quot;Treatment&quot;</span>,<span class="st">&quot;conc&quot;</span>,<span class="st">&quot;uptake&quot;</span>,<span class="st">&quot;id_var&quot;</span>))</code></pre></div>
+<pre><code>## [1] &quot;All column names present&quot;</code></pre>
 </div>
 <div id="checking-ids" class="section level2">
 <h2>Checking IDs</h2>
@@ -124,6 +127,7 @@ id_vars &lt;-<span class="st"> </span><span class="kw">unique</span>(master_data
 
 id_list &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">Plant=</span>plants, <span class="dt">conc=</span>concs, <span class="dt">id_var=</span>id_vars)
 <span class="kw">assert_ids</span>(master_data,id_list)</code></pre></div>
+<pre><code>## [1] &quot;Data is identified by id_vars: Plant conc id_var&quot;</code></pre>
 <p>Now, let’s make sure that there are only two values in Type: Quebec and Mississippi. Let’s also make sure that uptake and conc are more than 0 and less than 1500.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">assert_values</span>(master_data, <span class="dt">colnames =</span> <span class="st">&quot;Type&quot;</span>, <span class="dt">test=</span><span class="st">&quot;in&quot;</span>, <span class="dt">test_val =</span> <span class="kw">c</span>(<span class="st">&quot;Quebec&quot;</span>,<span class="st">&quot;Mississippi&quot;</span>))</code></pre></div>
 <pre><code>## [1] &quot;Variable Type passed in test&quot;</code></pre>
@@ -193,6 +197,7 @@ vetting_data &lt;-<span class="st"> </span><span class="kw">assert_ids</span>(ne
 <p>Hmm, we forgot to include the values of id_var in the actual id_vars argument. Now, let’s try it the last time with the id_var character vector included.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">new_concs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">175</span>,<span class="dv">250</span>,<span class="dv">350</span>,<span class="dv">500</span>,<span class="dv">675</span>,<span class="dv">1000</span>)
 <span class="kw">assert_ids</span>(new_data, <span class="kw">list</span>(<span class="dt">Plant=</span><span class="kw">c</span>(<span class="st">&quot;Qn2&quot;</span>,<span class="st">&quot;Qn3&quot;</span>), <span class="dt">conc=</span>new_concs, <span class="dt">id_var=</span>id_vars))</code></pre></div>
+<pre><code>## [1] &quot;Data is identified by id_vars: Plant conc id_var&quot;</code></pre>
 <p>Awesome! Now you’re a data wizard!</p>
 </div>
 
