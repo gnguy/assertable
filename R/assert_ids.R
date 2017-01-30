@@ -96,7 +96,8 @@ assert_ids <- function(data, id_vars, assert_combos=TRUE, assert_dups=TRUE, ids_
   }
   if(assert_dups == TRUE & nrow(data_ids) != nrow(data)) {
     data <- data.table(data)
-    duplicates <- data[duplicated(data[, .SD, .SDcols=id_varnames]), .SD, .SDcols=id_varnames]
+    duplicates <- data[duplicated(data[, .SD, .SDcols=id_varnames])]
+    duplicates <- duplicates[, .SD, .SDcols=id_varnames] # Subset columns separately to avoid dt lock issue in <1.9.8 https://github.com/Rdatatable/data.table/issues/1341
     nrow_duplicates <- nrow(duplicates)
 
     ## Get the total number of duplicates in each id combination.
