@@ -36,29 +36,28 @@
 
 import_files <- function(filenames, folder="", FUN=fread, warn_only=FALSE, multicore=FALSE, use.names=TRUE, fill=TRUE, 
                         mc.preschedule=FALSE, mc.cores = getOption("mc.cores", 2L), ...) {
-  
-  if(folder != "") {
-    pwd <- getwd()
-    setwd(folder)
-  }
 
-  file_list <- sapply(filenames,file.exists)
-  file_list <- names(file_list)[file_list==FALSE]
+  file_list <- tryCatch({
+    test <- check_files(filenames, folder, warn_only=T)
+  }, warning = function(w) {
+    return(test)
+  })
+
   if(length(file_list) > 0) {
     message <- paste0("These files do not exist: ",paste(file_list, collapse=" "))
 
     if(warn_only == FALSE) {
-      if(folder != "") setwd(pwd)
       stop(message)
     } else {
       warning(paste0("Some files don't exist, importing those that do exist. ",message))
       filenames <- filenames[!filenames %in% file_list]
       if(length(filenames)==0) {
-        if(folder != "") setwd(pwd)
         stop("No files exist to import")
       }
     }
   }
+
+  if(folder != "") filenames <- file.path(folder,filenames)
 
   if(multicore == FALSE) {
     results <- rbindlist(lapply(filenames, FUN,...), use.names=use.names, fill=fill)
@@ -67,6 +66,5 @@ import_files <- function(filenames, folder="", FUN=fread, warn_only=FALSE, multi
                         use.names=use.names, fill=fill)
   }
 
-  if(folder != "") setwd(pwd)
   return(results)
 }
