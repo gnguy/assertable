@@ -25,6 +25,7 @@
 #' @param display_rows Do you want to show the actual rows that violate the assertion? Default=T
 #' @param na.rm Do you want to remove NA and NaN values from assertions? Default=F
 #' @param warn_only Do you want to warn, rather than error? Will return all offending rows from the first violation of the assertion Default=F
+#' @param quiet Do you want to suppress the printed messages when a test is passed? Default = F.
 
 #' @return Throws error if test is violated. If warn_only=T, will return all offending rows from the first violation of the assertion.
 #' @export
@@ -46,7 +47,7 @@
 #' }
 
 
-assert_values <- function(data, colnames, test="not_na", test_val=NA, display_rows = TRUE, na.rm=FALSE, warn_only=FALSE) {
+assert_values <- function(data, colnames, test="not_na", test_val=NA, display_rows = TRUE, na.rm=FALSE, warn_only=FALSE, quiet=FALSE) {
   if(!(test %in% c("not_na","not_nan","not_inf")) & is.na(test_val[1])) 
     stop("Must specify test_val argument for comparison tests")
   
@@ -101,12 +102,12 @@ assert_values <- function(data, colnames, test="not_na", test_val=NA, display_ro
         print(data[rows,])
         stop(paste(nrows,"Rows for variable",col,error_message,"in the dataset above"))
       } else if(warn_only == TRUE) {
-        warning(paste(nrows,"Rows for variable",col,error_message,":",paste(which(rows==TRUE),collapse = " ")))
+        warning(paste(nrows,"Rows for variable",col,error_message,"in the dataset"))
         return(data[rows,])
       } else {
         stop(paste(nrows,"Rows for variable",col,error_message,":",paste(which(rows==TRUE),collapse = " ")))
       }
     }
-    print(paste("Variable",col,"passed",test,"test"))
+    if(quiet != TRUE) print(paste("Variable",col,"passed",test,"test"))
   }
 }

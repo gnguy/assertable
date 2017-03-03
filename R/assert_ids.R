@@ -19,7 +19,8 @@
 #' @param assert_dups Assert that the data object must not contain duplicate values within any combinations of \emph{id_vars}. Default = T.
 #' @param ids_only By default, with assert_dups = T, the function returns the unique combinations of id_vars that have duplicate observations. 
 #'                  If ids_only = F, will return every observation in the original dataset that are duplicates.
-#' @param warn_only Do you want to warn, rather than error? Will return all offending rows from the first violation of the assertion. Default=F
+#' @param warn_only Do you want to warn, rather than error? Will return all offending rows from the first violation of the assertion. Default=F.
+#' @param quiet Do you want to suppress the printed message when a test is passed? Default = F.
 
 #' @return Throws error if test is violated. Will print the offending rows. If warn_only=T, will return all offending rows and only warn.
 #' @export
@@ -32,7 +33,7 @@
 
 #' @import data.table
 
-assert_ids <- function(data, id_vars, assert_combos=TRUE, assert_dups=TRUE, ids_only = TRUE, warn_only=FALSE) {
+assert_ids <- function(data, id_vars, assert_combos=TRUE, assert_dups=TRUE, ids_only = TRUE, warn_only=FALSE, quiet=FALSE) {
   id_varnames <- names(id_vars)
   
   for(varname in id_varnames) {
@@ -131,5 +132,5 @@ assert_ids <- function(data, id_vars, assert_combos=TRUE, assert_dups=TRUE, ids_
       return(duplicate_ids)
     }
   }
-  print(paste0("Data is identified by id_vars: ",paste(id_varnames,collapse=" ")))
+  if(quiet != TRUE) print(paste0("Data is identified by id_vars: ",paste(id_varnames,collapse=" ")))
 }
