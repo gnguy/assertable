@@ -5,7 +5,7 @@
 \title{Assert that a data.frame's columns are non-NA/infinite, or are greater, less than, equal/not-equal, or contain specified values.}
 \usage{
 assert_values(data, colnames, test = "not_na", test_val = NA,
-  display_rows = TRUE, na.rm = FALSE, warn_only = FALSE)
+  display_rows = TRUE, na.rm = FALSE, warn_only = FALSE, quiet = FALSE)
 }
 \arguments{
 \item{data}{A data.frame or data.table}
@@ -34,6 +34,8 @@ Must match the character type of colnames.}
 \item{na.rm}{Do you want to remove NA and NaN values from assertions? Default=F}
 
 \item{warn_only}{Do you want to warn, rather than error? Will return all offending rows from the first violation of the assertion Default=F}
+
+\item{quiet}{Do you want to suppress the printed messages when a test is passed? Default = F.}
 }
 \value{
 Throws error if test is violated. If warn_only=T, will return all offending rows from the first violation of the assertion.

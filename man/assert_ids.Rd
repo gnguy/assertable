@@ -5,7 +5,7 @@
 \title{Assert that a data.frame contains all unique combinations of specified ID variables, and doesn't contain duplicates within combinations}
 \usage{
 assert_ids(data, id_vars, assert_combos = TRUE, assert_dups = TRUE,
-  ids_only = TRUE, warn_only = FALSE)
+  ids_only = TRUE, warn_only = FALSE, quiet = FALSE)
 }
 \arguments{
 \item{data}{A data.frame or data.table}
@@ -19,7 +19,9 @@ assert_ids(data, id_vars, assert_combos = TRUE, assert_dups = TRUE,
 \item{ids_only}{By default, with assert_dups = T, the function returns the unique combinations of id_vars that have duplicate observations. 
 If ids_only = F, will return every observation in the original dataset that are duplicates.}
 
-\item{warn_only}{Do you want to warn, rather than error? Will return all offending rows from the first violation of the assertion. Default=F}
+\item{warn_only}{Do you want to warn, rather than error? Will return all offending rows from the first violation of the assertion. Default=F.}
+
+\item{quiet}{Do you want to suppress the printed message when a test is passed? Default = F.}
 }
 \value{
 Throws error if test is violated. Will print the offending rows. If warn_only=T, will return all offending rows and only warn.
