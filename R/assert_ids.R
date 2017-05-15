@@ -59,7 +59,7 @@ assert_ids <- function(data, id_vars, assert_combos=TRUE, assert_dups=TRUE, ids_
     }
   }
 
-  ## Extract the id variables from the dataset
+  ## Extract the combinations of id variables from the dataset
   if(is.data.table(data)) {
     data_ids <- data[, .SD, .SDcols=id_varnames]
     setkey(data_ids, NULL) # Remove key to avoid unique() issues for older versions of data.table
@@ -71,7 +71,8 @@ assert_ids <- function(data, id_vars, assert_combos=TRUE, assert_dups=TRUE, ids_
     }
   }  
   
-  target_ids <- data.table(expand.grid(id_vars,stringsAsFactors=FALSE))
+  ## Create unique combinations of all id variables based on input id_vars
+  target_ids <- data.table(do.call(CJ, id_vars))
   if(assert_combos==TRUE){
     target_ids$in_target <- 1
     data_ids$in_data <- 1
