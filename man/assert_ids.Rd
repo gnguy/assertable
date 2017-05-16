@@ -47,4 +47,3 @@ concs <- unique(CO2$conc)
 ids <- list(Plant=plants,conc=concs)
 assert_ids(CO2, ids)
 }
-

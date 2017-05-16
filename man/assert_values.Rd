@@ -61,4 +61,3 @@ assert_values(CO2, colnames="uptake", test="equal", CO2_mult$new_uptake/2)
  # Fails: uptake !> new_uptake/2
 }
 }
-

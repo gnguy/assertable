@@ -20,4 +20,3 @@ Given a data.frame or data.table object and a target number of rows, check that 
 \examples{
 assert_nrows(CO2,84)
 }
-

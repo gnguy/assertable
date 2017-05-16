@@ -50,4 +50,3 @@ Optionally, can keep checking for a specified amount of time, at a given frequen
  import_files(filenames, FUN=fread, multicore=T, mc.cores=1) # Only if you have a multi-core system
 }
 }
-

@@ -40,4 +40,3 @@ Optionally, can keep checking for a specified amount of time, at a given frequen
  check_files(filenames)
 }
 }
-

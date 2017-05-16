@@ -23,4 +23,3 @@ Given a data.frame or data.table object, assert that all columns in the colnames
 assert_colnames(CO2, c("Plant","Type","Treatment","conc","uptake"))
 assert_colnames(CO2, c("Plant","Type"), only_colnames=FALSE)
 }
-
