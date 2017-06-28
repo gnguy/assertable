@@ -50,7 +50,7 @@
       <h1>assertable File Assertion Intro</h1>
                         <h4 class="author">Grant Nguyen</h4>
             
-            <h4 class="date">2017-05-09</h4>
+            <h4 class="date">2017-06-28</h4>
           </div>
 
     
@@ -82,24 +82,24 @@ filenames</code></pre></div>
 <p>Here, let’s add another file to filenames.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">c</span>(filenames,<span class="st">"new_file.csv"</span>)
 <span class="kw"><a href="../reference/check_files.html">check_files</a></span>(filenames)</code></pre></div>
-<pre><code>## [1] "Have 3 files: expecting 4 at 2017-05-09 13:22:37"
+<pre><code>## [1] "Have 3 files: expecting 4 at 2017-06-28 09:36:55"
 ## [1] "Still Missing: new_file.csv"</code></pre>
 <pre><code>## Error in check_files(filenames): Files not complete; stopping execution -- set continual=T for continual file checks</code></pre>
 <p>By setting continual = T, you can keep checking for the files every few seconds (specified by sleep_time) for a designated number of minutes (specified by sleep_end). This is particularly useful when monitoring the progress of distributed compute jobs, or pausing execution of a step until all previous steps have successfully produced otuput files.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">c</span>(filenames,<span class="st">"new_file.csv"</span>)
 <span class="kw"><a href="../reference/check_files.html">check_files</a></span>(filenames, <span class="dt">continual=</span>T, <span class="dt">sleep_time =</span> <span class="dv">1</span>, <span class="dt">sleep_end =</span> .<span class="dv">10</span>)</code></pre></div>
-<pre><code>## [1] "Have 3 files: expecting 5 at 2017-05-09 13:22:37"
-## [1] "Have 3 files: expecting 5 at 2017-05-09 13:22:38"
-## [1] "Have 3 files: expecting 5 at 2017-05-09 13:22:39"
-## [1] "Have 3 files: expecting 5 at 2017-05-09 13:22:40"
-## [1] "Have 3 files: expecting 5 at 2017-05-09 13:22:41"
-## [1] "Have 3 files: expecting 5 at 2017-05-09 13:22:42"
-## [1] "Have 3 files: expecting 5 at 2017-05-09 13:22:43"</code></pre>
+<pre><code>## [1] "Have 3 files: expecting 5 at 2017-06-28 09:36:55"
+## [1] "Have 3 files: expecting 5 at 2017-06-28 09:36:56"
+## [1] "Have 3 files: expecting 5 at 2017-06-28 09:36:57"
+## [1] "Have 3 files: expecting 5 at 2017-06-28 09:36:58"
+## [1] "Have 3 files: expecting 5 at 2017-06-28 09:36:59"
+## [1] "Have 3 files: expecting 5 at 2017-06-28 09:37:00"
+## [1] "Have 3 files: expecting 5 at 2017-06-28 09:37:01"</code></pre>
 <pre><code>## Error in check_files(filenames, continual = T, sleep_time = 1, sleep_end = 0.1): Files not complete; stopping execution after 0.1 minutes</code></pre>
 <p>check_files only prints out missing files if 75% of the requested files exist. You can change this using the display_pct argument. This is useful to see what specific files/processes may have errored out, but without filling up your logs while they are computing.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">c</span>(filenames,<span class="st">"new_file_1.csv"</span>,<span class="st">"new_file_2.csv"</span>)
 <span class="kw"><a href="../reference/check_files.html">check_files</a></span>(filenames, <span class="dt">display_pct=</span><span class="dv">50</span>)</code></pre></div>
-<pre><code>## [1] "Have 3 files: expecting 7 at 2017-05-09 13:22:44"</code></pre>
+<pre><code>## [1] "Have 3 files: expecting 7 at 2017-06-28 09:37:02"</code></pre>
 <pre><code>## Error in check_files(filenames, display_pct = 50): Files not complete; stopping execution -- set continual=T for continual file checks</code></pre>
 </div>
 <div id="importing-files" class="section level2">
@@ -144,7 +144,7 @@ data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/import
 <p>import_files first scans to make sure that all requested files exist prior to bringing them in. This can save a lot of time if you have numerous large files and currently only stop execution if your read.csv or other data import function breaks (potentially after importing many other files beforehand).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">c</span>(filenames,<span class="kw">paste0</span>(<span class="st">"new_file_"</span>,<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">10</span>),<span class="st">".csv"</span>))
 <span class="kw"><a href="../reference/import_files.html">import_files</a></span>(filenames)</code></pre></div>
-<pre><code>## [1] "Have 3 files: expecting 13 at 2017-05-09 13:22:44"</code></pre>
+<pre><code>## [1] "Have 3 files: expecting 13 at 2017-06-28 09:37:02"</code></pre>
 <pre><code>## Error in value[[3L]](cond): object 'test' not found</code></pre>
 </div>
 </div>
