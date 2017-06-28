@@ -37,11 +37,7 @@
 import_files <- function(filenames, folder="", FUN=fread, warn_only=FALSE, multicore=FALSE, use.names=TRUE, fill=TRUE, 
                         mc.preschedule=FALSE, mc.cores = getOption("mc.cores", 2L), ...) {
 
-  file_list <- tryCatch({
-    test <- check_files(filenames, folder, warn_only=T)
-  }, warning = function(w) {
-    return(test)
-  })
+  file_list <- suppressWarnings(check_files(filenames, folder, warn_only=TRUE))
 
   if(length(file_list) > 0) {
     message <- paste0("These files do not exist: ",paste(file_list, collapse=" "))
