@@ -63,7 +63,7 @@ assert_ids <- function(data, id_vars, assert_combos=TRUE, assert_dups=TRUE, ids_
   if(is.data.table(data)) {
     data_ids <- data[, .SD, .SDcols=id_varnames]
     setkey(data_ids, NULL) # Remove key to avoid unique() issues for older versions of data.table
-    data_ids <- unique(data_ids[, by=id_varnames])
+    data_ids <- unique(data_ids, by = id_varnames)
   } else {
     data_ids <- data.table(unique(data[, id_varnames]))
     if(length(id_varnames) == 1) {
