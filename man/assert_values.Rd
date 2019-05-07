@@ -5,7 +5,8 @@
 \title{Assert that a data.frame's columns are non-NA/infinite, or are greater, less than, equal/not-equal, or contain specified values.}
 \usage{
 assert_values(data, colnames, test = "not_na", test_val = NA,
-  display_rows = TRUE, na.rm = FALSE, warn_only = FALSE, quiet = FALSE)
+  display_rows = TRUE, na.rm = FALSE, warn_only = FALSE,
+  quiet = FALSE)
 }
 \arguments{
 \item{data}{A data.frame or data.table}

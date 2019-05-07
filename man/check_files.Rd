@@ -4,8 +4,9 @@
 \alias{check_files}
 \title{Check for the existence of a vector of files, optionally repeated for a set amount of time.}
 \usage{
-check_files(filenames, folder = "", warn_only = FALSE, continual = FALSE,
-  sleep_time = 30, sleep_end = (60 * 3), display_pct = 75)
+check_files(filenames, folder = "", warn_only = FALSE,
+  continual = FALSE, sleep_time = 30, sleep_end = (60 * 3),
+  display_pct = 75)
 }
 \arguments{
 \item{filenames}{A character vector of filenames (specify full paths if you are checking files that are not in present working directory)}
