@@ -5,6 +5,7 @@
 #' @param data A data.frame or data.table
 #' @param colnames Character vector with column names corresponding to columns in \emph{data}
 #' @param only_colnames Assert that the only columns in the data object should be those in \emph{colnames}. Default = T.
+#' @param quiet Do you want to suppress the printed message when a test is passed? Default = F.
 
 #' @return Throws error if test is violated.
 #' @export

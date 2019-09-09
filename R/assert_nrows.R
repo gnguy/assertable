@@ -4,6 +4,7 @@
 
 #' @param data A data.frame or data.table
 #' @param target_nrows Numeric -- number of expected rows
+#' @param quiet Do you want to suppress the printed message when a test is passed? Default = F.
 
 #' @return Throws error if test is violated
 #' @export
