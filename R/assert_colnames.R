@@ -13,7 +13,7 @@
 #' assert_colnames(CO2, c("Plant","Type","Treatment","conc","uptake"))
 #' assert_colnames(CO2, c("Plant","Type"), only_colnames=FALSE)
 
-assert_colnames <- function(data, colnames, only_colnames=TRUE) {
+assert_colnames <- function(data, colnames, only_colnames=TRUE, quiet=FALSE) {
   # Do all specified colnames exist in dataframe?
     non_df_cols <- colnames[!colnames %in% colnames(data)]
   
@@ -32,5 +32,8 @@ assert_colnames <- function(data, colnames, only_colnames=TRUE) {
     stop(paste0("These columns exist in your dataframe but not in colnames: ",
                 paste(non_colname_cols, collapse=" ")))
   }
-  print("All column names present")
+    
+  if(!quiet) {
+    print("All column names present")
+  }
 }
