@@ -4,12 +4,14 @@
 \alias{assert_nrows}
 \title{Assert that a data.frame contains a specified number of rows}
 \usage{
-assert_nrows(data, target_nrows)
+assert_nrows(data, target_nrows, quiet = FALSE)
 }
 \arguments{
 \item{data}{A data.frame or data.table}
 
 \item{target_nrows}{Numeric -- number of expected rows}
+
+\item{quiet}{Do you want to suppress the printed message when a test is passed? Default = F.}
 }
 \value{
 Throws error if test is violated

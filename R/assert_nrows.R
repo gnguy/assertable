@@ -4,13 +4,14 @@
 
 #' @param data A data.frame or data.table
 #' @param target_nrows Numeric -- number of expected rows
+#' @param quiet Do you want to suppress the printed message when a test is passed? Default = F.
 
 #' @return Throws error if test is violated
 #' @export
 #' @examples
 #' assert_nrows(CO2,84)
 
-assert_nrows <- function(data,target_nrows) {
+assert_nrows <- function(data, target_nrows, quiet=FALSE) {
   if(nrow(data) != target_nrows) stop(paste0("Have ", nrow(data), " rows, expecting ",target_nrows))
-  print("All rows present")
+  if(!quiet) print("All rows present")
 }

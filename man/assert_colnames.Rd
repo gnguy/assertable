@@ -4,7 +4,7 @@
 \alias{assert_colnames}
 \title{Assert that a data.frame contains specified column names}
 \usage{
-assert_colnames(data, colnames, only_colnames = TRUE)
+assert_colnames(data, colnames, only_colnames = TRUE, quiet = FALSE)
 }
 \arguments{
 \item{data}{A data.frame or data.table}
@@ -12,6 +12,8 @@ assert_colnames(data, colnames, only_colnames = TRUE)
 \item{colnames}{Character vector with column names corresponding to columns in \emph{data}}
 
 \item{only_colnames}{Assert that the only columns in the data object should be those in \emph{colnames}. Default = T.}
+
+\item{quiet}{Do you want to suppress the printed message when a test is passed? Default = F.}
 }
 \value{
 Throws error if test is violated.
