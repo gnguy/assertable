@@ -13,9 +13,11 @@
 
 #' @examples
 #' # Should pass
-#' assert_coltypes(CO2, list(Plant = integer(0), conc = double(0)))
+#' assert_coltypes(CO2, list(Plant = integer(), conc = double()))
 #' # Should fail
-#' assert_coltypes(CO2, list(Plant = character(0), conc = character(0))
+#' \dontrun{
+#'   assert_coltypes(CO2, list(Plant = character(), conc = character()))
+#' }
 
 assert_coltypes <- function(data, coltypes, quiet=FALSE) {
   # Do all specified colnames exist in data frame?
@@ -28,8 +30,13 @@ assert_coltypes <- function(data, coltypes, quiet=FALSE) {
   # Do all column types match?
   typematch <- sapply(data[, names(coltypes)], typeof) == sapply(coltypes, typeof)
   if(any(!typematch)) {
-    stop(paste0("These columns in your data frame have different types than coltypes: ",
-                paste(names(coltypes)[!typematch], collapse = " ")))
+    msg_list <- sprintf("%s should be '%s' but is '%s'", 
+                        names(coltypes),
+                        sapply(coltypes, typeof),
+                        sapply(data[, names(coltypes)], typeof))[!typematch]
+    
+    stop(paste0("These columns in your data frame have different types than coltypes: \n",
+                paste(msg_list, collapse = "\n")))
   }
   
   if(!quiet) {

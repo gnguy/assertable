@@ -23,7 +23,9 @@ argument match the types of the elements of the coltypes argument.
 }
 \examples{
 # Should pass
-assert_coltypes(CO2, list(Plant = integer(0), conc = double(0)))
+assert_coltypes(CO2, list(Plant = integer(), conc = double()))
 # Should fail
-assert_coltypes(CO2, list(Plant = character(0), conc = character(0))
+\dontrun{
+  assert_coltypes(CO2, list(Plant = character(), conc = character()))
+}
 }
