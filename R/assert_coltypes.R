@@ -28,12 +28,18 @@ assert_coltypes <- function(data, coltypes, quiet=FALSE) {
   }
   
   # Do all column types match?
-  typematch <- sapply(data[, names(coltypes)], typeof) == sapply(coltypes, typeof)
+  if(!is.data.table(data)) {
+    target_cols <- data[, names(coltypes)]
+  } else {
+    target_cols <- data[, names(coltypes), with = FALSE]
+  }
+  
+  typematch <- sapply(target_cols, typeof) == sapply(coltypes, typeof)
   if(any(!typematch)) {
     msg_list <- sprintf("%s should be '%s' but is '%s'", 
                         names(coltypes),
                         sapply(coltypes, typeof),
-                        sapply(data[, names(coltypes)], typeof))[!typematch]
+                        sapply(target_cols, typeof))[!typematch]
     
     stop(paste0("These columns in your data frame have different types than coltypes: \n",
                 paste(msg_list, collapse = "\n")))
