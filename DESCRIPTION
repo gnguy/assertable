@@ -2,7 +2,7 @@ Package: assertable
 Type: Package
 Title: Verbose Assertions for Tabular Data (Data.frames and
         Data.tables)
-Version: 0.2.7
+Version: 0.2.8
 Authors@R: c(
     person("Grant", "Nguyen", email="grant.nguyen@gmail.com", role = c("aut", "cre")),
     person("Max", "Czapanskiy", email="maxczapanskiy@gmail.com", role = c("ctb"))
